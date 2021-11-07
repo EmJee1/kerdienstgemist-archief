@@ -1,8 +1,12 @@
 import * as functions from 'firebase-functions'
 import RssParser from 'rss-parser'
 
-const RSS_FEED_URL =
-	'https://kerkdienstgemist.nl/playlists/10698.rss?access_key=DqHbrDXSfp4JdQ&media=audio'
+const rss = {
+	playlist: Number(functions.config().kerkdienstgemist.rss),
+	accessKey: functions.config().kerkdienstgemist.access_key,
+}
+
+const RSS_FEED_URL = `https://kerkdienstgemist.nl/playlists/${rss.playlist}.rss?access_key=${rss.accessKey}&media=audio`
 
 export const kerkdienstgemistFeed = functions.https.onRequest(
 	async (req, res) => {
