@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { fetchKerdienstgemistFeed } from '../services/kerdienst-gemist'
 import { IService } from '../models/kerdienst-gemist'
-import { formatDate } from '../util/datetime-helpers'
+import { formatDate, formatTime } from '../util/datetime-helpers'
 
 const services = ref<IService[]>([])
 
@@ -16,7 +16,10 @@ fetchKerdienstgemistFeed()
 		<h1 class="title">Kerdienstgemist archief</h1>
 		<div v-for="service in services">
 			<h4 class="is-size-4">{{ service.title }}</h4>
-			<p>{{ formatDate(new Date(service.pubDate)) }}</p>
+			<p>
+				{{ formatDate(new Date(service.pubDate)) }} -
+				{{ formatTime(new Date(service.pubDate)) }}
+			</p>
 			<a class="button" :href="service.enclosure.url">
 				<span class="icon">
 					<i class="fas fa-download"></i>
