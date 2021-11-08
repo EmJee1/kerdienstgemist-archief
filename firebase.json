@@ -26,6 +26,7 @@
 	"hosting": [
 		{
 			"public": "web/dist",
+			"target": "web",
 			"ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
 			"rewrites": [
 				{
