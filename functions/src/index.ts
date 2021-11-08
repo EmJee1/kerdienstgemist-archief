@@ -27,25 +27,25 @@ export const kerkdienstgemistFeed = functions.https.onRequest(
 )
 
 // run every sunday at 1:00 PM
-export const storeKerkdienstgemistService = functions.pubsub
-	.schedule('0 13 * * 7')
-	.onRun(async () => {
-		const parser = new RssParser()
+// export const storeKerkdienstgemistService = functions.pubsub
+// 	.schedule('0 13 * * 7')
+// 	.onRun(async () => {
+// 		const parser = new RssParser()
 
-		const feed = (await parser.parseURL(`${RSS_FEED_URL}&limit=4`)) as {
-			items: IService[]
-		}
+// 		const feed = (await parser.parseURL(`${RSS_FEED_URL}&limit=4`)) as {
+// 			items: IService[]
+// 		}
 
-		const batch = firestore.batch()
+// 		const batch = firestore.batch()
 
-		feed.items.forEach(item => {
-			const doc = firestore.collection('services').doc()
-			const data = {
-				createdAt: new Date(item.pubDate),
-				title: item.title,
-			}
-			batch.set(doc, data)
-		})
+// 		feed.items.forEach(item => {
+// 			const doc = firestore.collection('services').doc()
+// 			const data = {
+// 				createdAt: new Date(item.pubDate),
+// 				title: item.title,
+// 			}
+// 			batch.set(doc, data)
+// 		})
 
-		batch.commit()
-	})
+// 		batch.commit()
+// 	})
