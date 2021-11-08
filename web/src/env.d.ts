@@ -6,11 +6,3 @@ declare module '*.vue' {
 	const component: DefineComponent<{}, {}, any>
 	export default component
 }
-
-interface ImportMetaEnv extends Readonly<Record<string, string>> {
-	readonly KERDIENST_GEMIST_FEED: string
-}
-
-interface ImportMeta {
-	readonly env: ImportMetaEnv
-}
