@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions'
 import RssParser from 'rss-parser'
-import { firestore } from './firebase/firebase'
-import { IService } from './models/kerkdienst-gemist'
+// import { firestore } from './firebase/firebase'
+// import { IService } from './models/kerkdienst-gemist'
 
 const rss = {
 	playlist: Number(functions.config().kerkdienstgemist.rss),
