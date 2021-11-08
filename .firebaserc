@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "kerdienstgemist-archief"
+  },
+  "targets": {
+    "kerdienstgemist-archief": {
+      "hosting": {
+        "web": [
+          "kerkdienstgemist-archief"
+        ]
+      }
+    }
   }
 }
