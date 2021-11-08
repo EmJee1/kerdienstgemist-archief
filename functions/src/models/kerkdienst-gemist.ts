@@ -9,7 +9,7 @@ export interface IServiceItunes {
 	duration: string
 }
 
-export interface IService {
+export interface IKDGService {
 	title: string
 	link: string
 	pubDate: string
@@ -19,4 +19,9 @@ export interface IService {
 	guid: string
 	isoDate: string
 	itunes: IServiceItunes
+}
+
+export interface IService {
+	title: string
+	createdAt: Date
 }

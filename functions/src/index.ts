@@ -26,9 +26,9 @@ export const kerkdienstgemistFeed = functions.https.onRequest(
 	}
 )
 
-// run every sunday at 1:00 PM
+// run every sunday at 11:59 PM
 // export const storeKerkdienstgemistService = functions.pubsub
-// 	.schedule('0 13 * * 7')
+// 	.schedule('59 23 * * 7')
 // 	.onRun(async () => {
 // 		const parser = new RssParser()
 
