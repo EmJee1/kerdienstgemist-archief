@@ -23,5 +23,6 @@ export interface IKDGService {
 
 export interface IService {
 	title: string
+	file: string
 	createdAt: Date
 }
