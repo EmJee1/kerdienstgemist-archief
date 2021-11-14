@@ -37,9 +37,7 @@ export const storeLatestService = functions.https.onRequest(
 				return
 			}
 
-			const { data: rawData, contentType } = await downloadFromUrl(
-				item.enclosure.url
-			)
+			const [rawData, contentType] = await downloadFromUrl(item.enclosure.url)
 
 			const { file, fileLocation } = await uploadFileToStorage(
 				rawData,

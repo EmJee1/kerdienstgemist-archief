@@ -6,20 +6,14 @@ import { File } from '@google-cloud/storage'
 export const downloadFromUrl = async (
 	url: string,
 	options?: AxiosRequestConfig<any>
-) => {
-	const res = await axios.get(url, {
-		responseType: 'stream',
-		...options,
-	})
+): Promise<[any, string]> => {
+	const res = await axios.get(url, { responseType: 'stream', ...options })
 
 	if (res.status !== 200) {
 		throw new Error(`Did not get a valid response from ${url}`)
 	}
 
-	return {
-		data: res.data,
-		contentType: res.headers['content-type'],
-	}
+	return [res.data, res.headers['content-type']]
 }
 
 export const uploadFileToStorage = async (
