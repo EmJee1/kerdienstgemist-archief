@@ -1,4 +1,3 @@
-import { nanoid } from 'nanoid'
 import axios, { AxiosRequestConfig } from 'axios'
 import { bucket, firestore } from '../firebase/firebase'
 import { IKDGService, IService } from '../models/kerkdienst-gemist'
@@ -28,7 +27,7 @@ export const uploadFileToStorage = async (
 	fileName: string,
 	contentType: string
 ) => {
-	const fileLocation = `services/audio/${nanoid(8)}-${fileName}`
+	const fileLocation = `services/audio/${fileName}`
 	const file = bucket.file(fileLocation)
 	const writeStream = file.createWriteStream({ metadata: { contentType } })
 	await data.pipe(writeStream)
@@ -38,6 +37,12 @@ export const uploadFileToStorage = async (
 		file,
 	}
 }
+
+export const getServiceFileName = (service: IKDGService) =>
+	service.link.split('/')[service.link.split('/').length - 1].toLowerCase()
+
+export const getServiceId = (service: IKDGService) =>
+	getServiceFileName(service).split('-')[0]
 
 export const insertServiceToFirestore = async (
 	service: IKDGService,
@@ -51,7 +56,8 @@ export const insertServiceToFirestore = async (
 	}
 
 	try {
-		await firestore.collection('services').add(docData)
+		const docId = getServiceId(service)
+		await firestore.collection('services').doc(docId).set(docData)
 	} catch (err) {
 		await file.delete()
 		throw new Error(
@@ -60,4 +66,11 @@ export const insertServiceToFirestore = async (
 	}
 }
 
-export const serviceExistsInFirestore = async () => {}
+export const serviceExistsInFirestore = async (service: IKDGService) => {
+	try {
+		const docId = getServiceId(service)
+		return (await firestore.collection('services').doc(docId).get()).exists
+	} catch (err) {
+		throw err
+	}
+}

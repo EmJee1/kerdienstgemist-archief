@@ -1,28 +1,20 @@
 import * as functions from 'firebase-functions'
-import RssParser from 'rss-parser'
-import { IKDGService } from './models/kerkdienst-gemist'
+import { getKDGServices } from './utils/kdg-helpers'
 import {
 	downloadFromUrl,
 	uploadFileToStorage,
 	insertServiceToFirestore,
-} from './utils/webFileHelpers'
-
-const rss = {
-	playlist: Number(functions.config().kerkdienstgemist.rss),
-	accessKey: functions.config().kerkdienstgemist.access_key,
-}
-
-const RSS_FEED_URL = `https://kerkdienstgemist.nl/playlists/${rss.playlist}.rss?access_key=${rss.accessKey}&media=audio`
+	getServiceFileName,
+	serviceExistsInFirestore,
+} from './utils/web-file-helpers'
 
 export const kerkdienstgemistFeed = functions.https.onRequest(
 	async (req, res) => {
 		res.header('Access-Control-Allow-Origin', '*')
 
-		const parser = new RssParser()
-
 		try {
-			const feed = await parser.parseURL(RSS_FEED_URL)
-			res.json(feed.items).status(200)
+			const feed = await getKDGServices()
+			res.json(feed).status(200)
 		} catch (err) {
 			functions.logger.error('Error while parsing rss feed:', err)
 			res.sendStatus(500)
@@ -34,31 +26,32 @@ export const storeLatestService = functions.https.onRequest(
 	async (req, res) => {
 		res.header('Access-Control-Allow-Origin', '*')
 
-		const parser = new RssParser()
-
 		try {
-			const item = (await parser.parseURL(`${RSS_FEED_URL}&limit=1`))
-				.items[0] as IKDGService
+			const item = (await getKDGServices(1))[0]
 
-			try {
-				const { data: rawData, contentType } = await downloadFromUrl(
-					item.enclosure.url
-				)
-				const { file, fileLocation } = await uploadFileToStorage(
-					rawData,
-					'my-file',
-					contentType
-				)
-				await insertServiceToFirestore(item, fileLocation, file)
-			} catch (err) {
-				console.error(err)
-				res.sendStatus(500)
+			const fileName = getServiceFileName(item)
+
+			if (await serviceExistsInFirestore(item)) {
+				functions.logger.info('Service already exists')
+				res.sendStatus(404)
 				return
 			}
 
+			const { data: rawData, contentType } = await downloadFromUrl(
+				item.enclosure.url
+			)
+
+			const { file, fileLocation } = await uploadFileToStorage(
+				rawData,
+				fileName,
+				contentType
+			)
+
+			await insertServiceToFirestore(item, fileLocation, file)
+
 			res.json({ done: true }).status(200)
 		} catch (err) {
-			functions.logger.error('Error while parsing rss feed:', err)
+			functions.logger.error(err)
 			res.sendStatus(500)
 		}
 	}
