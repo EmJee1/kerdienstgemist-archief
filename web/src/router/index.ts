@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import KerdienstGemist from '../pages/kerdienstGemist.vue'
+import KerdienstGemist from '../pages/KerdienstGemist.vue'
 
 const routes: RouteRecordRaw[] = [
 	{
