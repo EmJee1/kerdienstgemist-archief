@@ -8,7 +8,7 @@ const services = ref<IService[]>([])
 
 fetchKerdienstgemistFeed()
 	.then((items: any) => (services.value = items))
-	.catch(err => console.error('Error while parsing feed:', err))
+	.catch(err => console.error('Error while requesting feed:', err))
 </script>
 
 <template>
