@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { IService } from '../models/kerdienst-gemist'
+import { IKDGService } from '../models/kerdienst-gemist'
 
 // TODO: fix environment variables
 const URL = {
@@ -9,4 +9,4 @@ const URL = {
 }
 
 export const fetchKerdienstgemistFeed = async () =>
-	(await axios.get<IService>(URL.prod)).data
+	(await axios.get<IKDGService>(URL.prod)).data

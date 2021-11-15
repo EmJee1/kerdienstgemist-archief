@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import KerdienstGemist from '../pages/KerdienstGemist.vue'
+import KerdienstGemist from '../pages/Archive.vue'
 
 const routes: RouteRecordRaw[] = [
 	{
 		path: '/',
-		redirect: '/kerdienst-gemist',
+		redirect: '/archive',
 	},
 	{
-		path: '/kerdienst-gemist',
+		path: '/archive',
 		component: KerdienstGemist,
 	},
 ]
