@@ -20,16 +20,16 @@ export const uploadFileToStorage = async (
 	data: any,
 	fileName: string,
 	contentType: string
-) => {
+): Promise<[string, File]> => {
 	const fileLocation = `services/audio/${fileName}`
 	const file = bucket.file(fileLocation)
 	const writeStream = file.createWriteStream({ metadata: { contentType } })
 	await data.pipe(writeStream)
 
-	return {
+	return [
 		fileLocation,
 		file,
-	}
+	]
 }
 
 export const getServiceFileName = (service: IKDGService) =>
