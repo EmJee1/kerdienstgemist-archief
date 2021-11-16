@@ -26,10 +26,7 @@ export const uploadFileToStorage = async (
 	const writeStream = file.createWriteStream({ metadata: { contentType } })
 	await data.pipe(writeStream)
 
-	return [
-		fileLocation,
-		file,
-	]
+	return [fileLocation, file]
 }
 
 export const getServiceFileName = (service: IKDGService) =>
@@ -67,4 +64,24 @@ export const serviceExistsInFirestore = async (service: IKDGService) => {
 	} catch (err) {
 		throw err
 	}
+}
+
+export const serviceProcessingFlow = async (service: IKDGService) => {
+	const fileName = getServiceFileName(service)
+	console.log(`Started processing ${fileName}`)
+
+	// if (await serviceExistsInFirestore(service)) {
+	// 	throw new Error(`Service "${fileName}" already exists`)
+	// }
+
+	const [rawData, contentType] = await downloadFromUrl(service.enclosure.url)
+	const [fileLocation, file] = await uploadFileToStorage(
+		rawData,
+		fileName,
+		contentType
+	)
+
+	await insertServiceToFirestore(service, fileLocation, file)
+
+	console.log(`Processed service ${fileName}`)
 }

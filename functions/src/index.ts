@@ -1,26 +1,6 @@
 import * as functions from 'firebase-functions'
 import { getKDGServices } from './utils/kdg-helpers'
-import {
-	downloadFromUrl,
-	uploadFileToStorage,
-	insertServiceToFirestore,
-	getServiceFileName,
-	serviceExistsInFirestore,
-} from './utils/web-file-helpers'
-
-export const kerkdienstgemistFeed = functions.https.onRequest(
-	async (req, res) => {
-		res.header('Access-Control-Allow-Origin', '*')
-
-		try {
-			const feed = await getKDGServices()
-			res.json(feed).status(200)
-		} catch (err) {
-			functions.logger.error('Error while parsing rss feed:', err)
-			res.sendStatus(500)
-		}
-	}
-)
+import { serviceProcessingFlow } from './utils/web-file-helpers'
 
 export const storeLatestService = functions.https.onRequest(
 	async (req, res) => {
@@ -29,22 +9,7 @@ export const storeLatestService = functions.https.onRequest(
 		try {
 			const item = (await getKDGServices(1))[0]
 
-			const fileName = getServiceFileName(item)
-
-			if (await serviceExistsInFirestore(item)) {
-				functions.logger.info('Service already exists')
-				res.sendStatus(404)
-				return
-			}
-
-			const [rawData, contentType] = await downloadFromUrl(item.enclosure.url)
-			const [fileLocation, file] = await uploadFileToStorage(
-				rawData,
-				fileName,
-				contentType
-			)
-
-			await insertServiceToFirestore(item, fileLocation, file)
+			await serviceProcessingFlow(item)
 
 			res.json({ done: true }).status(200)
 		} catch (err) {
@@ -53,6 +18,18 @@ export const storeLatestService = functions.https.onRequest(
 		}
 	}
 )
+
+export const storeAllServices = functions.https.onRequest(async (req, res) => {
+	res.header('Access-Control-Allow-Origin', '*')
+
+	try {
+		const items = await getKDGServices(999)
+
+		items.forEach(async service => await serviceProcessingFlow(service))
+	} catch (err) {
+		res.sendStatus(500)
+	}
+})
 
 // run every sunday at 11:59 PM
 // export const storeKerkdienstgemistService = functions.pubsub
