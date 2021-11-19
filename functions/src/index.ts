@@ -7,6 +7,7 @@ import {
 
 export const syncRecentServices = functions.pubsub
 	.schedule('59 23 * * 7')
+	.timeZone('Europe/Amsterdam')
 	.onRun(async () => {
 		try {
 			const items = await getKDGServices(6)
