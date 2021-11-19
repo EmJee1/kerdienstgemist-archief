@@ -25,7 +25,8 @@ export const storeAllServices = functions.https.onRequest(async (req, res) => {
 	try {
 		const items = await getKDGServices(999)
 
-		items.forEach(async service => await serviceProcessingFlow(service))
+		// items.forEach(async service => await serviceProcessingFlow(service))
+		res.json({ items }).status(200)
 	} catch (err) {
 		res.sendStatus(500)
 	}
