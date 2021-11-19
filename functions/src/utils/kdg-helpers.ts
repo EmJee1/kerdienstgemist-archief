@@ -9,8 +9,6 @@ const rss = {
 
 const RSS_FEED_URL = `https://kerkdienstgemist.nl/playlists/${rss.playlist}.rss?access_key=${rss.accessKey}&media=audio`
 
-console.log(RSS_FEED_URL)
-
 const parser = new RssParser()
 
 export const getKDGServices = async (limit = 9): Promise<IKDGService[]> =>

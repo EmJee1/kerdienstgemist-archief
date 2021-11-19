@@ -7,13 +7,17 @@ export const downloadFromUrl = async (
 	url: string,
 	options?: AxiosRequestConfig<any>
 ): Promise<[any, string]> => {
-	const res = await axios.get(url, { responseType: 'stream', ...options })
+	try {
+		const res = await axios.get(url, { responseType: 'stream', ...options })
 
-	if (res.status !== 200) {
-		throw new Error(`Did not get a valid response from ${url}`)
+		if (res.status !== 200) {
+			throw new Error(`Did not get a valid response from ${url}`)
+		}
+
+		return [res.data, res.headers['content-type']]
+	} catch (err) {
+		throw err
 	}
-
-	return [res.data, res.headers['content-type']]
 }
 
 export const uploadFileToStorage = async (
@@ -21,12 +25,16 @@ export const uploadFileToStorage = async (
 	fileName: string,
 	contentType: string
 ): Promise<[string, File]> => {
-	const fileLocation = `services/audio/${fileName}`
-	const file = bucket.file(fileLocation)
-	const writeStream = file.createWriteStream({ metadata: { contentType } })
-	await data.pipe(writeStream)
+	try {
+		const fileLocation = `services/audio/${fileName}`
+		const file = bucket.file(fileLocation)
+		const writeStream = file.createWriteStream({ metadata: { contentType } })
+		await data.pipe(writeStream)
 
-	return [fileLocation, file]
+		return [fileLocation, file]
+	} catch (err) {
+		throw err
+	}
 }
 
 export const getServiceFileName = (service: IKDGService) =>
@@ -68,20 +76,23 @@ export const serviceExistsInFirestore = async (service: IKDGService) => {
 
 export const serviceProcessingFlow = async (service: IKDGService) => {
 	const fileName = getServiceFileName(service)
-	console.log(`Started processing ${fileName}`)
 
-	// if (await serviceExistsInFirestore(service)) {
-	// 	throw new Error(`Service "${fileName}" already exists`)
-	// }
+	try {
+		if (await serviceExistsInFirestore(service)) {
+			return false
+		}
 
-	const [rawData, contentType] = await downloadFromUrl(service.enclosure.url)
-	const [fileLocation, file] = await uploadFileToStorage(
-		rawData,
-		fileName,
-		contentType
-	)
+		const [rawData, contentType] = await downloadFromUrl(service.enclosure.url)
+		const [fileLocation, file] = await uploadFileToStorage(
+			rawData,
+			fileName,
+			contentType
+		)
 
-	await insertServiceToFirestore(service, fileLocation, file)
+		await insertServiceToFirestore(service, fileLocation, file)
 
-	console.log(`Processed service ${fileName}`)
+		return true
+	} catch (err) {
+		throw err
+	}
 }
