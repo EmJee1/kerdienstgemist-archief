@@ -96,3 +96,23 @@ export const serviceProcessingFlow = async (service: IKDGService) => {
 		throw err
 	}
 }
+
+interface GetExpirationDateProps {
+	days?: number
+	hours?: number
+	minutes?: number
+}
+
+export const getExpirationDate = ({
+	days,
+	hours,
+	minutes,
+}: GetExpirationDateProps) => {
+	const date = new Date()
+
+	if (days) date.setDate(date.getDate() + days)
+	if (hours) date.setHours(date.getHours() + hours)
+	if (minutes) date.setMinutes(date.getMinutes() + minutes)
+
+	return date
+}

@@ -1,6 +1,6 @@
-import admin from 'firebase-admin'
+import { initializeApp } from 'firebase-admin'
 
-admin.initializeApp()
+const app = initializeApp()
 
-export const firestore = admin.firestore()
-export const bucket = admin.storage().bucket()
+export const firestore = app.firestore()
+export const bucket = app.storage().bucket()

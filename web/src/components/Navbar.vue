@@ -5,16 +5,18 @@ const signout = () => auth.signOut()
 </script>
 
 <template>
-	<nav class="navbar" role="navigation" aria-label="main navigation">
-		<div id="navbarBasicExample" class="navbar-menu">
-			<div class="navbar-start">
-				<router-link to="/" class="navbar-item"> Home </router-link>
-			</div>
+	<nav role="navigation" aria-label="main navigation">
+		<div class="section py-4">
+			<div id="navbarBasicExample" class="nav-menu">
+				<div class="navbar-start">
+					<router-link to="/" class="navbar-item"> Home </router-link>
+				</div>
 
-			<div class="navbar-end">
-				<div class="navbar-item">
-					<div class="buttons">
-						<a class="button is-light" @click="signout"> Uitloggen </a>
+				<div class="navbar-end">
+					<div class="navbar-item">
+						<div class="buttons">
+							<a class="button is-light" @click="signout"> Uitloggen </a>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -23,11 +25,9 @@ const signout = () => auth.signOut()
 </template>
 
 <style lang="scss">
-.navbar-menu {
-	display: block;
-
-	@media only screen and (min-width: 1024px) {
-		display: flex;
-	}
+.nav-menu {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 </style>
