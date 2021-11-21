@@ -10,14 +10,19 @@
 					{{ formatTime(service.createdAt.toDate()) }}
 				</p>
 			</div>
-			<a class="button">
+			<button class="button" @click="urlModal = service">
 				<span class="icon">
-					<i class="fas fa-download"></i>
+					<i class="fas fa-share-alt"></i>
 				</span>
-				<span>Download link maken</span>
-			</a>
+				<span> Link maken </span>
+			</button>
 		</div>
 	</div>
+	<GeneratedUrlModal
+		v-if="urlModal"
+		:service="urlModal"
+		@close="urlModal = undefined"
+	></GeneratedUrlModal>
 </template>
 
 <script setup lang="ts">
@@ -29,17 +34,15 @@ import {
 	query,
 } from '@firebase/firestore'
 import { ref, onMounted } from 'vue'
-import { firestore } from '../firebase/firebase'
+import GeneratedUrlModal from '../components/GeneratedUrlModal.vue'
 import { subscribeAll } from '../firebase/firebase-helpers'
+import { firestore } from '../firebase/firebase'
 import { IService } from '../models/kerdienst-gemist'
 import { formatDate, formatTime } from '../util/datetime-helpers'
 
 const loading = ref(true)
 const services = ref<IService[]>([])
-
-// const getSignedUrl = (service: IService) => {
-// 	const file =
-// }
+const urlModal = ref<IService>()
 
 onMounted(async () => {
 	const collectionRef = collection(
@@ -53,7 +56,6 @@ onMounted(async () => {
 	)
 
 	subscribeAll<IService>(servicesQuery, data => {
-		console.log(data)
 		services.value = data
 		loading.value = false
 	})

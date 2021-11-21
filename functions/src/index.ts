@@ -9,6 +9,8 @@ import {
 
 export const createSignedServiceDownloadUrl = functions.https.onRequest(
 	async (req, res) => {
+		res.header('Access-Control-Allow-Origin', '*')
+
 		const servicePath = req.query.servicePath?.toString()
 
 		if (!servicePath) {

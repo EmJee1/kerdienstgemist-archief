@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import '@fortawesome/fontawesome-free/js/all.js'
 import 'bulma/css/bulma.css'
+import './util/axios'
 import { ref } from 'vue'
 import { auth } from './firebase/firebase'
 import Navbar from './components/Navbar.vue'
