@@ -46,7 +46,6 @@ import {
 	getDocs,
 	startAfter,
 	orderBy,
-	startAt,
 } from '@firebase/firestore'
 import { ref, onMounted } from 'vue'
 import Loader from '../components/Loader.vue'
@@ -100,8 +99,13 @@ const loadNextDataChunk = async (startAtIndex: number) => {
 	align-items: center;
 	padding: 1rem;
 	border-radius: 8px;
-	border: 1px solid #b2bec3;
+	border: 1px solid whitesmoke;
 	cursor: pointer;
+	transition: background-color 0.3s ease-in-out;
+
+	&:hover {
+		background: whitesmoke;
+	}
 }
 
 .load-more {
