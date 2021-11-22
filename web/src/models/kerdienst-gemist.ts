@@ -1,28 +1,5 @@
 import { Timestamp } from '@firebase/firestore'
 
-export interface IServiceEnclosure {
-	length: number
-	type: string
-	url: string
-}
-
-export interface IServiceItunes {
-	summary: string
-	duration: string
-}
-
-export interface IKDGService {
-	title: string
-	link: string
-	pubDate: string
-	enclosure: IServiceEnclosure
-	content: string
-	contentSnippet: string
-	guid: string
-	isoDate: string
-	itunes: IServiceItunes
-}
-
 export interface IService {
 	id: string
 	title: string
