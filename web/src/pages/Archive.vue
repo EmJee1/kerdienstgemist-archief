@@ -1,12 +1,13 @@
 <template>
 	<div class="section">
-		<h1 class="title">Archief</h1>
-		<Service
-			v-for="service in services"
-			@click="urlModal = service"
-			:service="service"
-			class="service"
-		/>
+		<div class="container">
+			<h1 class="title">Archief</h1>
+			<div class="columns is-multiline">
+				<div class="column is-6" v-for="service in services">
+					<Service :service="service" @click="urlModal = service" />
+				</div>
+			</div>
+		</div>
 		<LoadMoreButton :loading="loading" :load-next="loadNextDataChunk" />
 	</div>
 	<GeneratedUrlModal
@@ -72,20 +73,8 @@ const loadNextDataChunk = async () => {
 onMounted(loadNextDataChunk)
 </script>
 
-<style lang="scss" scoped>
-.service {
-	margin-bottom: 2rem;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 1rem;
-	border-radius: 8px;
-	border: 1px solid whitesmoke;
-	cursor: pointer;
-	transition: background-color 0.3s ease-in-out;
-
-	&:hover {
-		background: whitesmoke;
-	}
+<style scoped lang="scss">
+.column {
+	margin-bottom: 1rem;
 }
 </style>
