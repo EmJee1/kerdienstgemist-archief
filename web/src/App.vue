@@ -4,20 +4,22 @@ import 'bulma/css/bulma.css'
 import './util/axios'
 import { ref } from 'vue'
 import { auth } from './firebase/firebase'
+import FullPageLoader from './components/FullPageLoader.vue'
 import Navbar from './components/Navbar.vue'
 import Login from './pages/Login.vue'
 
-const isLoggedIn = ref(false)
+const isLoggedIn = ref<boolean>()
 
 auth.onAuthStateChanged(user => (isLoggedIn.value = user ? true : false))
 </script>
 
 <template>
-	<div v-if="isLoggedIn">
+	<FullPageLoader v-if="isLoggedIn === undefined" />
+	<Login v-else-if="!isLoggedIn" />
+	<div v-else>
 		<Navbar />
 		<router-view />
 	</div>
-	<Login v-else />
 </template>
 
 <style>

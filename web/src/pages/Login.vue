@@ -44,6 +44,7 @@ const isValidatedPassword = computed(() => password.value.length > 6)
 						class="input"
 						type="email"
 						placeholder="Email"
+						autocomplete="email"
 						v-model="email"
 						:disabled="submitted"
 					/>
@@ -64,6 +65,7 @@ const isValidatedPassword = computed(() => password.value.length > 6)
 						class="input"
 						type="password"
 						placeholder="Password"
+						autocomplete="current-password"
 						v-model="password"
 						:disabled="submitted"
 					/>
