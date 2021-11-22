@@ -2,12 +2,11 @@
 import { ref, computed } from 'vue'
 import { validate as validateEmail } from 'email-validator'
 import { auth } from '../firebase/firebase'
-import {
-	createUserWithEmailAndPassword,
-	signInWithEmailAndPassword,
-} from '@firebase/auth'
+import { signInWithEmailAndPassword } from '@firebase/auth'
+import Notification, { NotificationType } from '../components/Notification.vue'
 
 const submitted = ref(false)
+const error = ref(false)
 const email = ref('')
 const password = ref('')
 
@@ -16,7 +15,7 @@ const onSubmit = () => {
 		.then(() => console.log('Login successfull'))
 		.catch(err => {
 			console.error(err)
-			alert('Error while signing in')
+			error.value = true
 		})
 }
 
@@ -28,6 +27,17 @@ const isValidatedPassword = computed(() => password.value.length > 6)
 	<div class="section">
 		<h1 class="is-size-1">Login</h1>
 		<form @submit.prevent="onSubmit">
+			<div class="field" v-if="error">
+				<div class="control">
+					<Notification :type="NotificationType.Danger">
+						<template v-slot:header>Fout bij het inloggen</template>
+						<template v-slot:body>
+							Controleer je gegevens en neem contact op met de beheerder als dit
+							fout blijft gaan
+						</template>
+					</Notification>
+				</div>
+			</div>
 			<div class="field">
 				<div class="control has-icons-left has-icons-right">
 					<input
