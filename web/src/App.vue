@@ -18,7 +18,11 @@ auth.onAuthStateChanged(user => (isLoggedIn.value = user ? true : false))
 	<Login v-else-if="!isLoggedIn" />
 	<div v-else>
 		<Navbar />
-		<router-view />
+		<div class="section">
+			<div class="container">
+				<router-view />
+			</div>
+		</div>
 	</div>
 </template>
 

@@ -9,7 +9,10 @@ const signout = () => auth.signOut()
 		<div class="section py-4">
 			<div id="navbarBasicExample" class="nav-menu">
 				<div class="navbar-start">
-					<router-link to="/" class="navbar-item"> Home </router-link>
+					<router-link to="/archive" class="navbar-item">Archief</router-link>
+					<router-link to="/embedding" class="navbar-item">
+						Embedding
+					</router-link>
 				</div>
 
 				<div class="navbar-end">
@@ -24,10 +27,14 @@ const signout = () => auth.signOut()
 	</nav>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .nav-menu {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+
+	.navbar-start {
+		gap: 1rem;
+	}
 }
 </style>

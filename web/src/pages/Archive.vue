@@ -1,15 +1,11 @@
 <template>
-	<div class="section">
-		<div class="container">
-			<h1 class="title">Archief</h1>
-			<div class="columns is-multiline">
-				<div class="column is-6" v-for="service in services">
-					<Service :service="service" @click="urlModal = service" />
-				</div>
-			</div>
+	<h1 class="title">Archief</h1>
+	<div class="columns is-multiline">
+		<div class="column is-6" v-for="service in services">
+			<Service :service="service" @click="urlModal = service" />
 		</div>
-		<LoadMoreButton :loading="loading" :load-next="loadNextDataChunk" />
 	</div>
+	<LoadMoreButton :loading="loading" :load-next="loadNextDataChunk" />
 	<GeneratedUrlModal
 		v-if="urlModal"
 		:service="urlModal"

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import KerdienstGemist from '../pages/Archive.vue'
+import Embedding from '../pages/Embedding.vue'
 
 const routes: RouteRecordRaw[] = [
 	{
@@ -9,6 +10,10 @@ const routes: RouteRecordRaw[] = [
 	{
 		path: '/archive',
 		component: KerdienstGemist,
+	},
+	{
+		path: '/embedding',
+		component: Embedding,
 	},
 ]
 
