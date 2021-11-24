@@ -1,5 +1,5 @@
 <template>
-	<div class="tabs" :class="{ 'is-centered': center }">
+	<div class="tabs" :class="{ 'is-centered': center, 'is-boxed': boxed }">
 		<ul>
 			<slot />
 		</ul>
@@ -7,5 +7,5 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ center?: boolean }>()
+defineProps<{ center?: boolean; boxed?: boolean }>()
 </script>

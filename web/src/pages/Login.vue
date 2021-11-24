@@ -12,7 +12,6 @@ const password = ref('')
 
 const onSubmit = () => {
 	signInWithEmailAndPassword(auth, email.value, password.value)
-		.then(() => console.log('Login successfull'))
 		.catch(err => {
 			console.error(err)
 			error.value = true
