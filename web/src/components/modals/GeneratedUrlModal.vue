@@ -28,21 +28,7 @@
 				</template>
 			</Notification>
 			<Loader v-if="loading" />
-			<div v-else class="copy-url" @click="copyUrl">
-				<input disabled type="text" class="input" :value="url" ref="inputRef" />
-				<button
-					class="button is-info"
-					:class="{
-						'is-info': copyStatus === undefined,
-						'is-danger': copyStatus === false,
-						'is-success': copyStatus,
-					}"
-				>
-					<span class="icon">
-						<i class="fas fa-copy"></i>
-					</span>
-				</button>
-			</div>
+			<InputCopy v-else :text="url" />
 		</template>
 	</Modal>
 </template>
@@ -50,17 +36,16 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-import Modal from './Modal.vue'
-import Loader from './Loader.vue'
-import Notification from './Notification.vue'
-import { IService } from '../models/kerdienst-gemist'
-import { ColorType } from '../models/styling'
+import Modal from '../Modal.vue'
+import Loader from '../Loader.vue'
+import InputCopy from '../InputCopy.vue'
+import Notification from '../Notification.vue'
+import { IService } from '../../models/kerdienst-gemist'
+import { ColorType } from '../../models/styling'
 
 defineEmits<{ (e: 'close'): void }>()
 const props = defineProps<{ service: IService }>()
 
-const inputRef = ref<HTMLInputElement>()
-const copyStatus = ref<boolean>()
 const url = ref('')
 const loading = ref(true)
 const error = ref(false)
@@ -79,34 +64,4 @@ onMounted(async () => {
 		loading.value = false
 	}
 })
-
-const copyUrl = () => {
-	if (!inputRef.value) return
-
-	copyStatus.value = undefined
-
-	// disabled selects are not selectable, by toggling disabled the select method works as expected
-	inputRef.value.disabled = false
-	inputRef.value.select()
-	inputRef.value.disabled = true
-
-	navigator.clipboard
-		.writeText(url.value)
-		.then(() => (copyStatus.value = true))
-		.catch(err => {
-			copyStatus.value = false
-			console.error(err)
-		})
-		.finally(() => setTimeout(() => (copyStatus.value = undefined), 2000))
-}
 </script>
-
-<style lang="scss">
-.copy-url {
-	display: flex;
-
-	.input[type='text'] {
-		cursor: pointer;
-	}
-}
-</style>

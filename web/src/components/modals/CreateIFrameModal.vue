@@ -43,14 +43,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { v4 as uuid } from 'uuid'
-import { doc, setDoc, Timestamp } from '@firebase/firestore'
-import Modal from './Modal.vue'
-import Button from './Button.vue'
-import Notification from './Notification.vue'
-import { ColorType } from '../models/styling'
-import { IIFrameEmbed } from '../models/embedding'
-import { firestore } from '../firebase/firebase'
-import Loader from './Loader.vue'
+import { addDoc, collection, Timestamp } from '@firebase/firestore'
+import Modal from '../Modal.vue'
+import Button from '../Button.vue'
+import Notification from '../Notification.vue'
+import { ColorType } from '../../models/styling'
+import { IIFrameEmbed } from '../../models/embedding'
+import { firestore } from '../../firebase/firebase'
+import Loader from '../Loader.vue'
 
 const emit = defineEmits<{ (e: 'close'): void }>()
 
@@ -68,7 +68,7 @@ const onSubmit = async () => {
 	}
 
 	try {
-		await setDoc(doc(firestore, 'embeds', 'iframe'), newDoc)
+		await addDoc(collection(firestore, 'iframes'), newDoc)
 		emit('close')
 	} catch (err) {
 		console.error(err)

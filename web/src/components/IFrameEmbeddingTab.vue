@@ -7,9 +7,9 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr v-for="iFrame in dummyData" @click="selectedIFrame = iFrame">
+			<tr v-for="iFrame in iFrames" @click="selectedIFrame = iFrame">
 				<td>{{ iFrame.name }}</td>
-				<td>{{ formatDate(new Date()) }}</td>
+				<td>{{ formatDate(iFrame.createdAt.toDate()) }}</td>
 			</tr>
 		</tbody>
 	</table>
@@ -32,30 +32,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { v4 as uuid } from 'uuid'
+import { firestore } from '../firebase/firebase'
 import { IIFrameEmbed } from '../models/embedding'
 import { ColorType } from '../models/styling'
 import { formatDate } from '../util/datetime-helpers'
-import IFrameEmbeddingModal from './IFrameEmbeddingModal.vue'
 import Button from './Button.vue'
-import CreateIFrameModal from './CreateIFrameModal.vue'
-
-const dummyData: IIFrameEmbed[] = [
-	{
-		id: 'AABBCC',
-		name: 'Kerkwebsite',
-		apiKey: uuid(),
-	},
-	{
-		id: 'DDEEFF',
-		name: 'Andere externe bron',
-		apiKey: uuid(),
-	},
-]
+import CreateIFrameModal from './modals/CreateIFrameModal.vue'
+import IFrameEmbeddingModal from './modals/IFrameEmbeddingModal.vue'
+import { subscribeAll } from '../firebase/firebase-helpers'
+import { collection, CollectionReference } from '@firebase/firestore'
 
 const showCreateIFrame = ref(false)
+const iFrames = ref<IIFrameEmbed[]>([])
 const selectedIFrame = ref<IIFrameEmbed>()
+
+onMounted(() => {
+	subscribeAll<IIFrameEmbed>(
+		collection(firestore, 'iframes') as CollectionReference<IIFrameEmbed>,
+		data => {
+			console.log('new embedding items:', data)
+			iFrames.value = data
+		}
+	)
+})
 </script>
 
 <style scoped lang="scss">

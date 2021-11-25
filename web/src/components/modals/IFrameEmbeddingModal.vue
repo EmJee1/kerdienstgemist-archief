@@ -9,27 +9,7 @@
 			></button>
 		</template>
 		<template v-slot:body>
-			<div class="copy-url">
-				<input
-					disabled
-					type="text"
-					class="input"
-					:value="iFrameCode"
-					ref="inputRef"
-				/>
-				<button
-					class="button is-info"
-					:class="{
-						'is-info': copyStatus === undefined,
-						'is-danger': copyStatus === false,
-						'is-success': copyStatus,
-					}"
-				>
-					<span class="icon">
-						<i class="fas fa-copy"></i>
-					</span>
-				</button>
-			</div>
+			<InputCopy :text="iFrameCode" />
 			<hr />
 			<Notification :type="ColorType.Warning" v-if="iFrameName">
 				<template v-slot:header>Belangrijke informatie</template>
@@ -42,7 +22,7 @@
 			</Notification>
 			<form @submit.prevent="onDeleteSubmit">
 				<label for="iframe-name" class="label">
-					Type de naam van dit iFrame om te verwijderen ({{ iFrame.name }})
+					Type de naam van dit iFrame ({{ iFrame.name }}) om te verwijderen
 				</label>
 				<input class="input" id="iframe-name" v-model="iFrameName" />
 				<Button
@@ -60,16 +40,16 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import Modal from './Modal.vue'
-import Notification from './Notification.vue'
-import { IIFrameEmbed } from '../models/embedding'
-import { ColorType } from '../models/styling'
-import Button from './Button.vue'
+import Modal from '../Modal.vue'
+import Button from '../Button.vue'
+import InputCopy from '../InputCopy.vue'
+import Notification from '../Notification.vue'
+import { IIFrameEmbed } from '../../models/embedding'
+import { ColorType } from '../../models/styling'
 
 defineEmits<{ (e: 'close'): void }>()
 const props = defineProps<{ iFrame: IIFrameEmbed }>()
 
-const copyStatus = ref<boolean>()
 const iFrameName = ref('')
 
 const iFrameCode = computed(
@@ -78,6 +58,6 @@ const iFrameCode = computed(
 )
 
 const onDeleteSubmit = (e: Event) => {
-	console.log('deleting...')
+	if (props.iFrame.name !== iFrameName.value) return
 }
 </script>

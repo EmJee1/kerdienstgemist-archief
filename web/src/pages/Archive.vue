@@ -26,7 +26,7 @@ import {
 import { ref, onMounted } from 'vue'
 import { firestore } from '../firebase/firebase'
 import { IService } from '../models/kerdienst-gemist'
-import GeneratedUrlModal from '../components/GeneratedUrlModal.vue'
+import GeneratedUrlModal from '../components/modals/GeneratedUrlModal.vue'
 import LoadMoreButton from '../components/LoadMoreButton.vue'
 import Service from '../components/Service.vue'
 
