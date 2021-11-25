@@ -7,14 +7,18 @@ import { auth } from './firebase/firebase'
 import FullPageLoader from './components/FullPageLoader.vue'
 import Navbar from './components/Navbar.vue'
 import Login from './pages/Login.vue'
+import useDevice from './composables/use-device'
+import ClientOffline from './pages/ClientOffline.vue'
 
 const isLoggedIn = ref<boolean>()
+const { isOnline } = useDevice(true)
 
 auth.onAuthStateChanged(user => (isLoggedIn.value = user ? true : false))
 </script>
 
 <template>
-	<FullPageLoader v-if="isLoggedIn === undefined" />
+	<ClientOffline v-if="!isOnline" />
+	<FullPageLoader v-else-if="isLoggedIn === undefined" />
 	<Login v-else-if="!isLoggedIn" />
 	<div v-else>
 		<Navbar />

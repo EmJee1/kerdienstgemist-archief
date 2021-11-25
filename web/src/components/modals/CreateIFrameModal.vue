@@ -71,10 +71,13 @@ const onSubmit = async () => {
 		await addDoc(collection(firestore, 'iframes'), newDoc)
 		emit('close')
 	} catch (err) {
+		console.log('Here in the catch')
 		console.error(err)
 		error.value = true
+		console.log('At the end of catch')
+	} finally {
+		console.log('Here in the finally')
+		loading.value = false
 	}
-
-	loading.value = false
 }
 </script>
