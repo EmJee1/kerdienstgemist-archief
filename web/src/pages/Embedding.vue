@@ -22,12 +22,12 @@
 import { ref } from 'vue'
 import Tabs from '../components/Tabs.vue'
 import TabItem from '../components/TabItem.vue'
-import ApiEmbeddingTab from '../components/ApiEmbeddingTab.vue';
-import IFrameEmbeddingTab from '../components/IFrameEmbeddingTab.vue';
+import ApiEmbeddingTab from '../components/ApiEmbeddingTab.vue'
+import IFrameEmbeddingTab from '../components/IFrameEmbeddingTab.vue'
 
 enum EmbeddingTabs {
 	Api = 'API',
-	IFrame = 'IFrame',
+	IFrame = 'iFrame',
 }
 
 const selectedTab = ref<EmbeddingTabs>(EmbeddingTabs.IFrame)

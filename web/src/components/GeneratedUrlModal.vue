@@ -9,14 +9,14 @@
 			></button>
 		</template>
 		<template v-slot:body>
-			<Notification :type="NotificationType.Warning">
+			<Notification :type="ColorType.Warning">
 				<template v-slot:header>Belangrijke informatie</template>
 				<template v-slot:body>
 					Met deze link is de dienst te beluisteren door iedereen die hiervan in
 					bezit is. Deze toegang geld voor 7 dagen.
 				</template>
 			</Notification>
-			<Notification v-if="error" :type="NotificationType.Danger">
+			<Notification v-if="error" :type="ColorType.Danger">
 				<template v-slot:header>Fout bij het genereren</template>
 				<template v-slot:body>
 					Bij het genereren van de url is er iets fout gegaan, probeer het
@@ -52,8 +52,9 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import Modal from './Modal.vue'
 import Loader from './Loader.vue'
-import Notification, { NotificationType } from './Notification.vue'
+import Notification from './Notification.vue'
 import { IService } from '../models/kerdienst-gemist'
+import { ColorType } from '../models/styling'
 
 defineEmits<{ (e: 'close'): void }>()
 const props = defineProps<{ service: IService }>()

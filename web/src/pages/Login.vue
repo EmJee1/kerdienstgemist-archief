@@ -3,7 +3,8 @@ import { ref, computed } from 'vue'
 import { validate as validateEmail } from 'email-validator'
 import { auth } from '../firebase/firebase'
 import { signInWithEmailAndPassword } from '@firebase/auth'
-import Notification, { NotificationType } from '../components/Notification.vue'
+import Notification from '../components/Notification.vue'
+import { ColorType } from '../models/styling'
 
 const submitted = ref(false)
 const error = ref(false)
@@ -11,11 +12,10 @@ const email = ref('')
 const password = ref('')
 
 const onSubmit = () => {
-	signInWithEmailAndPassword(auth, email.value, password.value)
-		.catch(err => {
-			console.error(err)
-			error.value = true
-		})
+	signInWithEmailAndPassword(auth, email.value, password.value).catch(err => {
+		console.error(err)
+		error.value = true
+	})
 }
 
 const isValidatedEmail = computed(() => validateEmail(email.value))
@@ -28,7 +28,7 @@ const isValidatedPassword = computed(() => password.value.length > 6)
 		<form @submit.prevent="onSubmit">
 			<div class="field" v-if="error">
 				<div class="control">
-					<Notification :type="NotificationType.Danger">
+					<Notification :type="ColorType.Danger">
 						<template v-slot:header>Fout bij het inloggen</template>
 						<template v-slot:body>
 							Controleer je gegevens en neem contact op met de beheerder als dit

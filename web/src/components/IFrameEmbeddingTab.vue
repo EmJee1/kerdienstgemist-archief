@@ -13,10 +13,21 @@
 			</tr>
 		</tbody>
 	</table>
+	<Button
+		icon="fas fa-plus"
+		:color-type="ColorType.Primary"
+		@click="showCreateIFrame = true"
+	>
+		Aanmaken
+	</Button>
 	<IFrameEmbeddingModal
 		v-if="selectedIFrame"
 		:i-frame="selectedIFrame"
 		@close="selectedIFrame = undefined"
+	/>
+	<CreateIFrameModal
+		v-if="showCreateIFrame"
+		@close="showCreateIFrame = false"
 	/>
 </template>
 
@@ -24,8 +35,11 @@
 import { ref } from 'vue'
 import { v4 as uuid } from 'uuid'
 import { IIFrameEmbed } from '../models/embedding'
+import { ColorType } from '../models/styling'
 import { formatDate } from '../util/datetime-helpers'
 import IFrameEmbeddingModal from './IFrameEmbeddingModal.vue'
+import Button from './Button.vue'
+import CreateIFrameModal from './CreateIFrameModal.vue'
 
 const dummyData: IIFrameEmbed[] = [
 	{
@@ -40,6 +54,7 @@ const dummyData: IIFrameEmbed[] = [
 	},
 ]
 
+const showCreateIFrame = ref(false)
 const selectedIFrame = ref<IIFrameEmbed>()
 </script>
 

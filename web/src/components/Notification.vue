@@ -19,20 +19,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { ColorType } from '../models/styling'
 
-defineProps<{ type: NotificationType; noClose?: boolean }>()
+defineProps<{ type: ColorType; noClose?: boolean }>()
 
 const show = ref(true)
-</script>
-
-<script lang="ts">
-export enum NotificationType {
-	Dark = 'is-dark',
-	Primary = 'is-primary',
-	Link = 'is-link',
-	Info = 'is-info',
-	Success = 'is-success',
-	Warning = 'is-warning',
-	Danger = 'is-danger',
-}
 </script>
