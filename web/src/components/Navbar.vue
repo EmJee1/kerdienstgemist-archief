@@ -1,7 +1,14 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { auth } from '../firebase/firebase'
 
-const signout = () => auth.signOut()
+const router = useRouter()
+
+const signout = () =>
+	auth
+		.signOut()
+		.then(() => router.push('/login'))
+		.catch(console.error)
 </script>
 
 <template>

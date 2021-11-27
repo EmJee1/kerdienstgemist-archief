@@ -71,7 +71,7 @@ const iFrameName = ref('')
 
 const iFrameCode = computed(
 	() =>
-		`https://kerdienstgemist-archief.web.app/iframe-embed?apiKey=${props.iFrame.apiKey}`
+		`<iframe src="https://kerdienstgemist-archief.web.app/iframe-embed?apiKey=${props.iFrame.apiKey}" title="kerkdiensten archief"></iframe>`
 )
 
 const onDeleteSubmit = async (e: Event) => {
@@ -81,12 +81,12 @@ const onDeleteSubmit = async (e: Event) => {
 
 	try {
 		await deleteDoc(doc(firestore, 'iframes', props.iFrame.id))
+		emit('close')
 	} catch (err) {
 		console.error(err)
 		error.value = true
 	} finally {
 		loading.value = false
-		emit('close')
 	}
 }
 </script>

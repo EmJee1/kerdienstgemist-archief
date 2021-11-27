@@ -2,24 +2,23 @@
 import '@fortawesome/fontawesome-free/js/all.js'
 import 'bulma/css/bulma.css'
 import './util/axios'
-import { ref } from 'vue'
-import { auth } from './firebase/firebase'
 import FullPageLoader from './components/FullPageLoader.vue'
 import Navbar from './components/Navbar.vue'
-import Login from './pages/Login.vue'
 import useDevice from './composables/use-device'
 import ClientOffline from './pages/ClientOffline.vue'
+import useFullpageLoader from './composables/use-fullpage-loader'
+import { useAuthState } from './composables/use-auth-state'
+import initAuthListener from './util/auth-listener'
 
-const isLoggedIn = ref<boolean>()
+useAuthState(true)
+initAuthListener()
 const { isOnline } = useDevice(true)
-
-auth.onAuthStateChanged(user => (isLoggedIn.value = user ? true : false))
+const { loaderActive } = useFullpageLoader()
 </script>
 
 <template>
-	<ClientOffline v-if="!isOnline" />
-	<FullPageLoader v-else-if="isLoggedIn === undefined" />
-	<Login v-else-if="!isLoggedIn" />
+	<FullPageLoader v-if="loaderActive" />
+	<ClientOffline v-else-if="!isOnline" />
 	<div v-else>
 		<Navbar />
 		<div class="section">

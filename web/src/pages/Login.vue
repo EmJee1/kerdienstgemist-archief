@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { validate as validateEmail } from 'email-validator'
-import { auth } from '../firebase/firebase'
 import { signInWithEmailAndPassword } from '@firebase/auth'
+import { auth } from '../firebase/firebase'
 import Notification from '../components/Notification.vue'
 import { ColorType } from '../models/styling'
 

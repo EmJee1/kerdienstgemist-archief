@@ -4,9 +4,9 @@
 		<button
 			class="button is-info"
 			:class="{
-				'is-info': copyStatus === undefined,
-				'is-danger': copyStatus === false,
-				'is-success': copyStatus,
+				[ColorType.Info]: copyStatus === undefined,
+				[ColorType.Danger]: copyStatus === false,
+				[ColorType.Success]: copyStatus,
 			}"
 		>
 			<span class="icon">
@@ -18,6 +18,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { ColorType } from '../models/styling'
 
 const props = defineProps<{ text: string }>()
 
