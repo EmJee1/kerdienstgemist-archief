@@ -6,6 +6,7 @@ import {
 	getServiceFileName,
 	serviceProcessingFlow,
 } from './utils/web-file-helpers'
+import { IKDGService } from './models/kerkdienst-gemist'
 
 export const createSignedServiceDownloadUrl = functions.https.onRequest(
 	async (req, res) => {
@@ -14,15 +15,17 @@ export const createSignedServiceDownloadUrl = functions.https.onRequest(
 		const servicePath = req.query.servicePath?.toString()
 
 		if (!servicePath) {
-			functions.logger.debug(`Requested signed url without servicePath query`)
+			functions.logger.debug(`Requested signed url without servicePath`)
 			res.sendStatus(422)
 			return
 		}
 
 		const file = bucket.file(servicePath)
 
-		if (!(await file.exists())) {
-			functions.logger.debug(`Requested service '${servicePath}' was not found`)
+		if (!(await file.exists())[0]) {
+			functions.logger.debug(
+				`Requested service '${servicePath}' not found`
+			)
 			res.sendStatus(404)
 			return
 		}
@@ -47,19 +50,29 @@ export const syncRecentServices = functions.pubsub
 	.schedule('59 23 * * 7')
 	.timeZone('Europe/Amsterdam')
 	.onRun(async () => {
-		try {
-			const items = await getKDGServices(6)
+		let items: IKDGService[]
 
-			for (const item of items) {
-				if (!(await serviceProcessingFlow(item))) {
+		try {
+			items = await getKDGServices(6)
+		} catch (err) {
+			functions.logger.error(err)
+			return
+		}
+
+		for (const item of items) {
+			try {
+				const processed = await serviceProcessingFlow(item)
+
+				if (!processed) {
 					// if not processed (service already exists in firestore)
 					// stop processing of remaining services, because rss feed is chronologically ordered
 					break
 				}
-
-				functions.logger.info(`${getServiceFileName(item)} added`)
+			} catch (err) {
+				functions.logger.error(err)
+				break
 			}
-		} catch (err) {
-			functions.logger.error(err)
+
+			functions.logger.info(`${getServiceFileName(item)} added`)
 		}
 	})
