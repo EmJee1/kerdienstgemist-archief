@@ -6,7 +6,8 @@
 
 ARG NODE_VERSION=26.7.0
 
-FROM node:${NODE_VERSION}-alpine AS base
+# Cloud Run only runs linux/amd64: https://docs.cloud.google.com/run/docs/container-contract
+FROM --platform=linux/amd64 node:${NODE_VERSION}-alpine AS base
 ENV npm_config_update_notifier=false
 ENV npm_config_fund=false
 ENV npm_config_audit=false
