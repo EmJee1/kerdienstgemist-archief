@@ -1,5 +1,6 @@
 import http from 'node:http';
 
+import { gracefulShutdown } from '@kdg/core/graceful-shutdown';
 import { fetchKdgRssFeed } from '@kdg/feed';
 
 import { config } from '#config';
@@ -37,3 +38,5 @@ const server = http.createServer(async (req, res) => {
 server.listen(config.port, config.host, () => {
   console.log(`Server listening on ${config.host}:${config.port}`);
 });
+
+gracefulShutdown(server);

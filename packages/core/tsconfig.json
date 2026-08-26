@@ -1,4 +1,4 @@
 {
-  "extends": "@kdg/config-typescript/base.json",
+  "extends": "@kdg/config-typescript/node.json",
   "include": ["src"]
 }
