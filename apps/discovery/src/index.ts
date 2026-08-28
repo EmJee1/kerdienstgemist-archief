@@ -1,9 +1,11 @@
 import http from 'node:http';
 
 import { gracefulShutdown } from '@kdg/core/graceful-shutdown';
-import { fetchKdgRssFeed } from '@kdg/feed';
+import { fetchKdgRssFeed } from '@kdg/feed/fetch';
+import { getServiceGuidForFeedItem } from '@kdg/feed/service-guid';
 
 import { config } from '#config';
+import { DiscoverV1ResponseBody } from '#models/discoverV1ResponseBody';
 
 const server = http.createServer(async (req, res) => {
   if (req.url !== '/discover' || req.method !== 'POST') {
@@ -19,7 +21,7 @@ const server = http.createServer(async (req, res) => {
 
   console.log('Received discovery request');
 
-  const feed = await fetchKdgRssFeed(config.kdgFeed.id, config.kdgFeed.accessKey, 1);
+  const feed = await fetchKdgRssFeed(config.kdgFeed.id, config.kdgFeed.accessKey, 4);
   if (!feed.isOk()) {
     console.log('error', feed.error);
     res.writeHead(502, { 'Content-Type': 'application/json' }).end(
@@ -32,7 +34,20 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify({ ok: true }));
+  // TODO: verify for each fetched service whether it is already stored
+  const servicesToStore = feed.value.rss.channel.item.map((item) =>
+    getServiceGuidForFeedItem(item),
+  );
+
+  const response: DiscoverV1ResponseBody = {
+    serviceIds: servicesToStore,
+    skipped: 0,
+    malformed: 0,
+    feedFetchedAt: new Date().toUTCString(),
+    archiveObject: '',
+  };
+
+  res.writeHead(200, { 'Content-Type': 'application/json' }).end(JSON.stringify(response));
 });
 
 server.listen(config.port, config.host, () => {
