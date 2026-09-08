@@ -1,3 +1,5 @@
+import { ServiceRetrieverConfig } from '@kdg/feed/service-retriever-factory';
+
 import { valueForEnvironment } from '#environment';
 
 function stringConfigOrFail(variable: string) {
@@ -10,29 +12,26 @@ function stringConfigOrFail(variable: string) {
   return value;
 }
 
+const serviceRetriever: ServiceRetrieverConfig = {
+  type: 'kerkdienstgemist',
+  playlistId: stringConfigOrFail('KDG_FEED_ID'),
+  accessKey: stringConfigOrFail('KDG_ACCESS_KEY'),
+};
+
 export const config = valueForEnvironment({
   local: {
     port: 8080,
     host: 'localhost',
-    kdgFeed: {
-      id: stringConfigOrFail('KDG_FEED_ID'),
-      accessKey: stringConfigOrFail('KDG_ACCESS_KEY'),
-    },
+    serviceRetriever,
   },
   staging: {
     port: Number(process.env.PORT),
     host: '0.0.0.0',
-    kdgFeed: {
-      id: stringConfigOrFail('KDG_FEED_ID'),
-      accessKey: stringConfigOrFail('KDG_ACCESS_KEY'),
-    },
+    serviceRetriever,
   },
   production: {
     port: Number(process.env.PORT),
     host: '0.0.0.0',
-    kdgFeed: {
-      id: stringConfigOrFail('KDG_FEED_ID'),
-      accessKey: stringConfigOrFail('KDG_ACCESS_KEY'),
-    },
+    serviceRetriever,
   },
 });

@@ -1,8 +1,7 @@
 import http from 'node:http';
 
 import { gracefulShutdown } from '@kdg/core/graceful-shutdown';
-import { getServiceGuidForFeedItem } from '@kdg/feed/service-guid';
-import { getServiceRetriever } from '@kdg/feed/service-retriever';
+import { getServiceRetriever } from '@kdg/feed/service-retriever-factory';
 
 import { config } from '#config';
 import { DiscoverV1ResponseBody } from '#models/discoverV1ResponseBody';
@@ -21,7 +20,7 @@ const server = http.createServer(async (req, res) => {
 
   console.log('Received discovery request');
 
-  const serviceRetriever = getServiceRetriever('kerkdienstgemist');
+  const serviceRetriever = getServiceRetriever(config.serviceRetriever);
   const feed = await serviceRetriever.getServices(4);
   if (!feed.isOk()) {
     console.log('error', feed.error);
@@ -36,9 +35,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // TODO: verify for each fetched service whether it is already stored
-  const servicesToStore = feed.value.rss.channel.item.map((item) =>
-    getServiceGuidForFeedItem(item),
-  );
+  const servicesToStore = feed.value.map((service) => service.id);
 
   const response: DiscoverV1ResponseBody = {
     serviceIds: servicesToStore,

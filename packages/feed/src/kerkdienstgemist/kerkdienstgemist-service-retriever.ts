@@ -1,19 +1,17 @@
 import { XMLParser } from 'fast-xml-parser';
-import { err, fromPromise, ok, Result, ResultAsync } from 'neverthrow';
+import { err, fromPromise, ok, Result } from 'neverthrow';
 import { z } from 'zod';
 
 import { KdgRssFeedResponse, KdgRssFeedItem } from '#kerkdienstgemist/models/rss-feed-response';
+import { KdgServiceRetrieverConfig } from '#kerkdienstgemist/models/service-retriever-config';
 import { Service } from '#models/service';
 import { getServiceGuidForFeedItem } from '#service-guid';
 import { ServiceRetriever, ServiceRetrieverError } from '#service-retriever';
 
 export class KerkdienstgemistServiceRetriever implements ServiceRetriever {
-  constructor(
-    private readonly playlistId: string,
-    private readonly accessKey: string,
-  ) {}
+  constructor(private readonly config: KdgServiceRetrieverConfig) {}
 
-  public async getServices(limit: number): Promise<ResultAsync<Service[], ServiceRetrieverError>> {
+  public async getServices(limit: number): Promise<Result<Service[], ServiceRetrieverError>> {
     const feed = await this.fetchAndParseKdgRssFeed(limit);
     if (!feed.isOk()) {
       return err(feed.error);
@@ -26,10 +24,10 @@ export class KerkdienstgemistServiceRetriever implements ServiceRetriever {
 
   private async fetchAndParseKdgRssFeed(
     limit: number,
-  ): Promise<ResultAsync<z.TypeOf<typeof KdgRssFeedResponse>, ServiceRetrieverError>> {
-    const url = new URL(`https://kerkdienstgemist.nl/playlists/${this.playlistId}.rss`);
+  ): Promise<Result<z.TypeOf<typeof KdgRssFeedResponse>, ServiceRetrieverError>> {
+    const url = new URL(`https://kerkdienstgemist.nl/playlists/${this.config.playlistId}.rss`);
     url.search = new URLSearchParams({
-      access_key: this.accessKey,
+      access_key: this.config.accessKey,
       media: 'audio',
       limit: limit.toString(),
     }).toString();

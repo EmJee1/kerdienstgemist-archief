@@ -1,7 +1,7 @@
 import { err, ok, Result } from 'neverthrow';
 import * as z from 'zod';
 
-import { KdgRssFeedItem } from '#models/rss-feed-response';
+import { KdgRssFeedItem } from '#kerkdienstgemist/models/rss-feed-response';
 
 const expectedGuidPrefix = 'https://kerkdienstgemist.nl/media/';
 
