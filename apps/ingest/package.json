@@ -5,12 +5,11 @@
   "imports": {
     "#*": {
       "types": "./src/*.ts",
-      "development": "./src/*.ts",
       "default": "./dist/*.js"
     }
   },
   "scripts": {
-    "start": "node --env-file=.env --conditions=development src/index.ts",
+    "start": "node --env-file=.env dist/index.js",
     "build": "tsc -p tsconfig.json",
     "check-types": "tsc --noEmit -p tsconfig.json",
     "lint": "oxlint --type-aware",
