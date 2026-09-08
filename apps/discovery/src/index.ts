@@ -1,8 +1,8 @@
 import http from 'node:http';
 
 import { gracefulShutdown } from '@kdg/core/graceful-shutdown';
-import { fetchKdgRssFeed } from '@kdg/feed/fetch';
 import { getServiceGuidForFeedItem } from '@kdg/feed/service-guid';
+import { getServiceRetriever } from '@kdg/feed/service-retriever';
 
 import { config } from '#config';
 import { DiscoverV1ResponseBody } from '#models/discoverV1ResponseBody';
@@ -21,7 +21,8 @@ const server = http.createServer(async (req, res) => {
 
   console.log('Received discovery request');
 
-  const feed = await fetchKdgRssFeed(config.kdgFeed.id, config.kdgFeed.accessKey, 4);
+  const serviceRetriever = getServiceRetriever('kerkdienstgemist');
+  const feed = await serviceRetriever.getServices(4);
   if (!feed.isOk()) {
     console.log('error', feed.error);
     res.writeHead(502, { 'Content-Type': 'application/json' }).end(
