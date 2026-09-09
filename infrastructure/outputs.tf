@@ -8,6 +8,11 @@ output "recordings_bucket" {
   value       = module.recordings_bucket.name
 }
 
+output "firestore_database" {
+  description = "Firestore database holding service metadata"
+  value       = module.database.name
+}
+
 output "feed_access_key_secret_id" {
   description = "Secret holding the kerkdienstgemist feed access key"
   value       = module.feed_access_key.secret_id

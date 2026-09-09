@@ -44,6 +44,20 @@ module "recordings_bucket" {
 }
 
 # ----------------------------------------------------
+# Database
+# ----------------------------------------------------
+module "database" {
+  source = "./modules/firestore-database"
+
+  project  = var.project
+  location = var.project_region
+
+  delete_protection = var.deletion_protection
+
+  depends_on = [google_project_service.required_apis]
+}
+
+# ----------------------------------------------------
 # Secrets
 # ----------------------------------------------------
 module "feed_access_key" {
