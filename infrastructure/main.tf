@@ -87,9 +87,11 @@ module "discovery" {
   deletion_protection = var.deletion_protection
 
   env = {
-    KDG_FEED_ID    = var.feed_id
-    ARCHIVE_BUCKET = module.rss_snapshots_bucket.name
-    NODE_ENV       = "production"
+    KDG_FEED_ID          = var.feed_id
+    ARCHIVE_BUCKET       = module.rss_snapshots_bucket.name
+    GOOGLE_CLOUD_PROJECT = var.project
+    FIRESTORE_DATABASE   = module.database.name
+    NODE_ENV             = "production"
   }
 
   secret_env = {
@@ -109,7 +111,7 @@ module "discovery" {
     feed_access_key = { secret_id = module.feed_access_key.secret_id }
   }
 
-  depends_on = [module.feed_access_key]
+  depends_on = [module.feed_access_key, module.database]
 }
 
 module "ingest" {

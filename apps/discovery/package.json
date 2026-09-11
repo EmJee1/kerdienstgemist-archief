@@ -18,6 +18,7 @@
   "dependencies": {
     "@kdg/config-typescript": "*",
     "@kdg/core": "*",
-    "@kdg/feed": "*"
+    "@kdg/feed": "*",
+    "@kdg/firestore": "*"
   }
 }

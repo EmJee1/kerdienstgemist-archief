@@ -1,9 +1,7 @@
 {
-  "name": "@kdg/core",
+  "name": "@kdg/firestore",
   "private": true,
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "imports": {
     "#*": {
       "types": "./src/*.ts",
@@ -25,6 +23,7 @@
     "lint:fix": "oxlint --type-aware --fix"
   },
   "dependencies": {
+    "@google-cloud/firestore": "9.0.1",
     "@kdg/config-typescript": "*"
   },
   "volta": {

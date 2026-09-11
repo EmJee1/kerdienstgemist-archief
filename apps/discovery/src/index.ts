@@ -2,9 +2,12 @@ import http from 'node:http';
 
 import { gracefulShutdown } from '@kdg/core/graceful-shutdown';
 import { getServiceRetriever } from '@kdg/feed/service-retriever-factory';
+import { createFirestoreClient } from '@kdg/firestore/firestore-client';
 
 import { config } from '#config';
 import { DiscoverV1ResponseBody } from '#models/discoverV1ResponseBody';
+
+const firestore = createFirestoreClient(config.firestore);
 
 const server = http.createServer(async (req, res) => {
   if (req.url !== '/discover' || req.method !== 'POST') {
@@ -50,6 +53,14 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(config.port, config.host, () => {
   console.log(`Server listening on ${config.host}:${config.port}`);
+  console.log(
+    `Firestore database "${config.firestore.databaseId}" in project "${config.firestore.projectId}"`,
+  );
 });
 
-gracefulShutdown(server);
+gracefulShutdown(server, {
+  onShutdown: async () => {
+    await firestore.terminate();
+    console.log('Firestore client terminated');
+  },
+});
